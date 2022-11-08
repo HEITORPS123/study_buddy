@@ -1,6 +1,12 @@
 from datetime import date, datetime
 from pydantic import BaseModel
 
+class SimpleID(BaseModel):
+    id : int
+
+class Interest(BaseModel):
+    interest : str
+
 class UsuarioBase(BaseModel):
     username  : str
     password  : str
@@ -18,6 +24,7 @@ class UsuarioResponse(UsuarioBase):
         orm_mode = True
 
 class GrupoBase(BaseModel):
+    user_id : int
     group_name : str
     organizer_name : str
     organizer_contact : str

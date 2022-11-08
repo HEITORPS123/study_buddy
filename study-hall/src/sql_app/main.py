@@ -27,8 +27,8 @@ async def createUser(request: schemas.UsuarioRequest, db: Session = Depends(get_
     UsuarioRepository.save(db, Usuario(**request.dict()))
 
 @app.post('/getUser', response_model=schemas.UsuarioResponse)
-async def getUser(user_id: int, db: Session = Depends(get_db)):
-    user = UsuarioRepository.find_by_id(db, user_id)
+async def getUser(user_id: schemas.SimpleID, db: Session = Depends(get_db)):
+    user = UsuarioRepository.find_by_id(db, user_id.id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail = "Usuário não encontrado."
@@ -36,24 +36,25 @@ async def getUser(user_id: int, db: Session = Depends(get_db)):
     return schemas.UsuarioResponse.from_orm(user)
 
 @app.post('/getUserGroups', response_model=list[schemas.UsuarioResponse])
-async def getUserGroups(group_id: int, db: Session = Depends(get_db)):
-    users = UsuarioRepository.find_by_group_id(db, group_id)
+async def getUserGroups(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
+    users = UsuarioRepository.find_by_group_id(db, group_id.id)
     return [schemas.UsuarioResponse.from_orm(user) for user in users]
 
 # Grupos -----------------------------------------------------------------------------------
 
 @app.post('/createGroup', status_code=status.HTTP_201_CREATED)
 async def createGroup(request: schemas.GrupoRequest, db: Session = Depends(get_db)):
-    GrupoRepository.save(db, Grupo(**request.dict()))
+    group = GrupoRepository.save(db, Grupo(**request.dict()))
+    UsuarioGrupoRepository.save(db, UsuarioGrupo(user_id = group.user_id, group_id = group.group_id))
 
 @app.post('/getGroup', response_model=schemas.GrupoResponse)
-async def getGroup(id: int, db: Session = Depends(get_db)):
-    group = GrupoRepository.find_by_id(db, id)
+async def getGroup(id: schemas.SimpleID, db: Session = Depends(get_db)):
+    group = GrupoRepository.find_by_id(db, id.id)
     return schemas.GrupoResponse.from_orm(group)
 
 @app.post('/getGroupInterest', response_model=list[schemas.GrupoResponse])
-async def getGroupInterest(interest: str, db: Session = Depends(get_db)):
-    groups = GrupoRepository.find_by_interest(db, interest)
+async def getGroupInterest(interest: schemas.Interest, db: Session = Depends(get_db)):
+    groups = GrupoRepository.find_by_interest(db, interest.interest)
     return [schemas.GrupoResponse.from_orm(group) for group in groups]
 
 # Eventos ----------------------------------------------------------------------------------------
@@ -62,8 +63,8 @@ async def createEvent(request: schemas.EventoRequest, db: Session = Depends(get_
     EventoRepository.save(db, Evento(**request.dict()))
 
 @app.post('/getEventGroup', response_model=list[schemas.EventoResponse])
-async def getGroup(group_id: int, db: Session = Depends(get_db)):
-    events = EventoRepository.find_by_group(db, group_id)
+async def getGroup(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
+    events = EventoRepository.find_by_group(db, group_id.id)
     return [schemas.EventoResponse.from_orm(event) for event in events]
 
 # Posts --------------------------------------------------------------------------------------------
@@ -72,8 +73,8 @@ async def createPost(request: schemas.PostRequest, db: Session = Depends(get_db)
     PostRepository.save(db, Post(**request.dict()))
 
 @app.post('/getPosts', response_model=list[schemas.PostResponse])
-async def getPosts(group_id: int, db: Session = Depends(get_db)):
-    posts = PostRepository.find_by_group_id(db, group_id)
+async def getPosts(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
+    posts = PostRepository.find_by_group_id(db, group_id.id)
     return [schemas.PostResponse.from_orm(post) for post in posts]
 
 # Extra --------------------------------------------------------------------------------------------
