@@ -35,6 +35,7 @@
             :items="items"
             filled
             label="Interests"
+            multiple
           ></v-select>
         </v-col>
       </v-row>
@@ -117,7 +118,7 @@
 <script>
   export default {
     data: () => ({
-      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      items: ['Ciencia', 'Historia', 'Portugues', 'Matematica', 'Geografia', 'Politica', 'Computacao', 'Filosofia', 'Sociologia'],
     }),
   }
 </script>
@@ -127,7 +128,7 @@
   
   export default {
     data: vm => ({
-      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      items: ['Ciencia', 'Historia', 'Portugues', 'Matematica', 'Geografia', 'Politica', 'Computacao', 'Filosofia', 'Sociologia'],
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       dateFormatted: vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
       menu1: false,

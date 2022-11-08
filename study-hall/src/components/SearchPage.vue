@@ -37,7 +37,7 @@
                 class="groupcards"
             >
                     <v-card
-                        :color="item.color"
+                        :color="cor"
                         dark
                         height="200px"
                         width="1000px"
@@ -50,15 +50,18 @@
                           class="cardimage"
                           ></v-img>
                         </v-column>
-                        <v-row>
-                          <v-column>
-                            <h2 class="cardcontent">{{ item.title }}</h2>
-                          </v-column>
-
-                          <v-column>
-                            <h2 class="cardcontent">Membros:</h2>
-                          </v-column>
-                        </v-row>
+                        <v-column>
+                          <v-row>
+                              <h2 class="cardcontent">{{ item.title }}</h2>
+                          </v-row>
+                          <v-row>
+                            <v-column>
+                              <v-btn class="cardcontent">
+                                enter
+                              </v-btn>
+                            </v-column>
+                          </v-row>
+                        </v-column>
                       </v-row>
                     </v-card>
             </v-row>
@@ -116,6 +119,7 @@
                 artist: 'Ellie Goulding',
                 },
             ],
+            cor: '#D9D9D9',
             start: 0, // Lower limit 
             end: 5, // Upper Limit
             questions: [], // Array containing all the questions.
@@ -191,6 +195,7 @@
   }
 
   .cardcontent {
+    color:#000000;
     margin-top: 50px;
     margin-left: 50px;
     margin-right: 50px;

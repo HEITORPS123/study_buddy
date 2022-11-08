@@ -89,7 +89,7 @@
 
   export default {
     data: () => ({
-      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      items: ['Ciencia', 'Historia', 'Portugues', 'Matematica', 'Geografia', 'Politica', 'Computacao', 'Filosofia', 'Sociologia'],
       group_name: "",
       organizer_id: 0,
       organizer_name: "",
