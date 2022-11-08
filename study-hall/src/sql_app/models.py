@@ -3,7 +3,7 @@ from sqlalchemy.schema import Column
 from sqlalchemy.types import String, Integer, DateTime
 from sqlalchemy import ForeignKey
 from database import Base, engine
-import datetime
+from sqlalchemy.sql import func
 
 class Usuario(Base):
     __tablename__ = 'tbl_Usuario'
@@ -39,7 +39,7 @@ class Post(Base):
     __tablename__ = 'tbl_Post'
     post_id = Column(Integer, primary_key = True, index = True)
     content = Column(String(200))
-    date = Column(DateTime)
+    date = Column(DateTime, default=func.now())
     group_id = Column(Integer, ForeignKey("tbl_Grupo.group_id"))
     user_id  = Column(Integer, ForeignKey("tbl_Usuario.user_id"))
 
