@@ -39,6 +39,7 @@
           class="ml-12"
           label="Nome do Evento"
           ref="event_name"
+          v-model="event_name"
           filled
           clearable
           rounded
@@ -52,6 +53,7 @@
           class="ml-12"
           label="Data do Evento"
           ref="event_date"
+          v-model="event_date"
           filled
           clearable
           rounded
@@ -90,44 +92,19 @@
   </v-dialog>
 </template>
 <script>
+import axios from 'axios';
 export default {
-  data: () => ({
-    events: [
-      {
-        event_name: "banana",
-        about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 16:36"
-      },
-      {
-        event_name: "laranja",
-        about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 15:36"
-      },
-      {
-        event_name: "kiwi",
-        about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 14:36"
-      },
-      {
-        event_name: "uva",
-        about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis.",
-        date: "24/12/2006 13:36"
-      },
-      {
-        event_name: "pidamonha",
-        about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 12:36"
-      },
-      {
-        event_name: "coreto",
-        about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 11:36"
-      }
-    ]
-  }),
   methods: {
-    create () {
-      alert("Evento criado")
+    async create () {
+      let url = 'http://localhost:8890/createEvent'
+      let data = {
+          group_id: parseInt(this.$route.params.group_id),
+          event_name: this.event_name,
+          content: this.event_about,
+          date: this.event_date
+      }
+      console.log(data)
+      await axios.post(url,data)
     }
   }
 }

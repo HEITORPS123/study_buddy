@@ -60,6 +60,7 @@
 </template>
 <script>
 import GroupEvents from "@/components/GroupEventsComponent";
+import axios from 'axios';
 export default {
   components: {
     GroupEvents
@@ -73,9 +74,31 @@ export default {
         interest: "Geografia",
       }
   }),
+  async mounted () {
+      let user_id = document.cookie.split('=')[1]
+
+      let url = 'http://localhost:8890/getGroup'
+      let data = {
+          id: parseInt(user_id),
+      }
+
+      const response = await axios.post(url,data)
+      this.group = response.data
+  },
   methods: {
-    entrar () {
-      alert("Entrou no grupo")
+    async entrar () {
+      let user_id = document.cookie.split('=')[1]
+
+      let url = 'http://localhost:8890/addUserGroup'
+      let data = {
+          user_id: parseInt(user_id),
+          group_id: parseInt(this.$route.params.group_id)
+      }
+
+      await axios.post(url,data)
+      /* if (response.data === null) { */
+      /*   alert("Você já está nesse grupo!"); */
+      /* } */
     }
   }
 }

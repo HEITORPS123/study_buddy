@@ -42,7 +42,7 @@
                   </v-col>
                   <v-col>
                     <v-row>
-                      <p class="date-post"> {{ post.date }} </p>
+                      <p class="date-post"> {{ post.username }} </p>
                     </v-row>
                     <v-row>
                       <p class="content-post"> {{ post.content }} </p>
@@ -122,46 +122,43 @@
   </v-container>
 </template>
 <script>
+import axios from 'axios';
 export default {
   data: () => ({
     user_avatar: "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
-    posts: [
-      {
-        username: "banana",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 16:36"
-      },
-      {
-        username: "laranja",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 15:36"
-      },
-      {
-        username: "kiwi",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 14:36"
-      },
-      {
-        username: "uva",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis.",
-        date: "24/12/2006 13:36"
-      },
-      {
-        username: "pidamonha",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 12:36"
-      },
-      {
-        username: "coreto",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis bibendum ut tristique et egestas quis. Habitasse platea dictumst quisque sagittis. Id nibh tortor id aliquet. Proin libero nunc consequat interdum varius sit. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam.",
-        date: "24/12/2006 11:36"
-      }
-    ]
+    posts: []
   }),
+  async mounted () {
+      let url = 'http://localhost:8890/getPosts'
+      let data = {
+          id: parseInt(this.$route.params.group_id),
+      }
+
+      const response = await axios.post(url,data)
+      this.posts = response.data
+  },
   methods: {
-    post () {
-      this.posts.unshift({username:"teste", content:this.postcontent, date: "24/12/2007 15:23"})
+    async post () {
+      let user_id = document.cookie.split('=')[1]
+
+      let url = 'http://localhost:8890/createPost'
+      let data = {
+          group_id: parseInt(this.$route.params.group_id),
+          user_id: parseInt(user_id),
+          content: this.postcontent
+      }
+
+      await axios.post(url,data)
+
       this.postcontent=""
+
+      let url2 = 'http://localhost:8890/getPosts'
+      let data2 = {
+          id: parseInt(this.$route.params.group_id),
+      }
+
+      const response2 = await axios.post(url2,data2)
+      this.posts = response2.data
     }
   }
 }

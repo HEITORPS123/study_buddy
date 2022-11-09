@@ -49,6 +49,7 @@
   </v-container>
 </template>
 <script>
+import axios from 'axios';
 export default {
   data: () => ({
     user_avatar: "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
@@ -75,10 +76,18 @@ export default {
       }
     ]
   }),
+  async mounted () {
+      let url = 'http://localhost:8890/getUserGroups'
+      let data = {
+          id: parseInt(this.$route.params.group_id),
+      }
+
+      const response = await axios.post(url,data)
+      this.members = response.data
+  },
   methods: {
     open_profile (user_id) {
-      alert("User ID desse usuário é " + user_id)
-
+      this.$router.push(`/user/${user_id}`);
     }
   } 
 }
