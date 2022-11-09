@@ -4,10 +4,20 @@ from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from repositories import UsuarioRepository, GrupoRepository, EventoRepository, PostRepository, UsuarioGrupoRepository
 from models import Usuario, UsuarioGrupo, Grupo, Evento, Post
+from typing import List
 import models
 import schemas
+from starlette.middleware.cors import CORSMiddleware
 
-app  = FastAPI()
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_db():
     try:
@@ -24,7 +34,8 @@ def read_root():
 
 @app.post('/createUser', status_code=status.HTTP_201_CREATED)
 async def createUser(request: schemas.UsuarioRequest, db: Session = Depends(get_db)):
-    UsuarioRepository.save(db, Usuario(**request.dict()))
+    user = UsuarioRepository.save(db, Usuario(**request.dict()))
+    return schemas.UsuarioResponse.from_orm(user)
 
 @app.post('/getUser', response_model=schemas.UsuarioResponse)
 async def getUser(user_id: schemas.SimpleID, db: Session = Depends(get_db)):
@@ -35,7 +46,7 @@ async def getUser(user_id: schemas.SimpleID, db: Session = Depends(get_db)):
         )
     return schemas.UsuarioResponse.from_orm(user)
 
-@app.post('/getUserGroups', response_model=list[schemas.UsuarioResponse])
+@app.post('/getUserGroups', response_model=List[schemas.UsuarioResponse])
 async def getUserGroups(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
     users = UsuarioRepository.find_by_group_id(db, group_id.id)
     return [schemas.UsuarioResponse.from_orm(user) for user in users]
@@ -46,13 +57,14 @@ async def getUserGroups(group_id: schemas.SimpleID, db: Session = Depends(get_db
 async def createGroup(request: schemas.GrupoRequest, db: Session = Depends(get_db)):
     group = GrupoRepository.save(db, Grupo(**request.dict()))
     UsuarioGrupoRepository.save(db, UsuarioGrupo(user_id = group.user_id, group_id = group.group_id))
+    return schemas.GrupoResponse.from_orm(group)
 
 @app.post('/getGroup', response_model=schemas.GrupoResponse)
 async def getGroup(id: schemas.SimpleID, db: Session = Depends(get_db)):
     group = GrupoRepository.find_by_id(db, id.id)
     return schemas.GrupoResponse.from_orm(group)
 
-@app.post('/getGroupInterest', response_model=list[schemas.GrupoResponse])
+@app.post('/getGroupInterest', response_model=List[schemas.GrupoResponse])
 async def getGroupInterest(interest: schemas.Interest, db: Session = Depends(get_db)):
     groups = GrupoRepository.find_by_interest(db, interest.interest)
     return [schemas.GrupoResponse.from_orm(group) for group in groups]
@@ -60,9 +72,10 @@ async def getGroupInterest(interest: schemas.Interest, db: Session = Depends(get
 # Eventos ----------------------------------------------------------------------------------------
 @app.post('/createEvent', status_code=status.HTTP_201_CREATED)
 async def createEvent(request: schemas.EventoRequest, db: Session = Depends(get_db)):
-    EventoRepository.save(db, Evento(**request.dict()))
+    event = EventoRepository.save(db, Evento(**request.dict()))
+    return schemas.EventoResponse(event)
 
-@app.post('/getEventGroup', response_model=list[schemas.EventoResponse])
+@app.post('/getEventGroup', response_model=List[schemas.EventoResponse])
 async def getGroup(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
     events = EventoRepository.find_by_group(db, group_id.id)
     return [schemas.EventoResponse.from_orm(event) for event in events]
@@ -70,9 +83,10 @@ async def getGroup(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
 # Posts --------------------------------------------------------------------------------------------
 @app.post('/createPost', status_code=status.HTTP_201_CREATED)
 async def createPost(request: schemas.PostRequest, db: Session = Depends(get_db)):
-    PostRepository.save(db, Post(**request.dict()))
+    post = PostRepository.save(db, Post(**request.dict()))
+    return schemas.PostResponse.from_orm(post)
 
-@app.post('/getPosts', response_model=list[schemas.PostResponse])
+@app.post('/getPosts', response_model=List[schemas.PostResponse])
 async def getPosts(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
     posts = PostRepository.find_by_group_id(db, group_id.id)
     return [schemas.PostResponse.from_orm(post) for post in posts]
@@ -80,8 +94,9 @@ async def getPosts(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
 # Extra --------------------------------------------------------------------------------------------
 @app.post('/login')
 async def login(request: schemas.Login, db: Session = Depends(get_db)):
-    if UsuarioRepository.login(db, request.username, request.password):
-        return status.HTTP_200_OK
+    user = UsuarioRepository.login(db, request.username, request.password)
+    if user:
+        return schemas.UsuarioResponse.from_orm(user)
     else:
         return status.HTTP_401_UNAUTHORIZED
 

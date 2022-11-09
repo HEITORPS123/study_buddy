@@ -10,7 +10,7 @@ const routes = [
     component: () => import('../components/RegisterPage.vue'),
   },
   {
-    path: '/group',
+    path: '/group/:group_id',
     name: 'group',
     component: () => import('../components/GroupPage.vue'),
   },
@@ -20,7 +20,7 @@ const routes = [
     component: () => import('../components/RegisterGroupPage.vue'),
   },
   {
-    path: '/user',
+    path: '/user/:user_id',
     name: 'user',
     component: () => import('../components/UserPage.vue'),
   },
