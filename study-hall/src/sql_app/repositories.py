@@ -21,6 +21,11 @@ class UsuarioRepository:
         return db.query(Usuario).join(UsuarioGrupo).filter(UsuarioGrupo.group_id == id)
 
     @staticmethod
+    def delete(db: Session, id: int):
+        db.query(Usuario).filter(Usuario.user_id == id).delete()
+        db.commit()
+
+    @staticmethod
     def login(db: Session, username: str, password: str):
         user = db.query(Usuario).filter(Usuario.username == username).first()
 
@@ -49,6 +54,11 @@ class GrupoRepository:
         return group
 
     @staticmethod
+    def delete(db: Session, id: int):
+        db.query(Grupo).filter(Grupo.group_id == id).delete()
+        db.commit()
+
+    @staticmethod
     def find_by_user_id(db: Session, id: int) -> Grupo:
         return db.query(Grupo).filter(Grupo.user_id == id).first()
     
@@ -66,6 +76,11 @@ class EventoRepository:
             db.add(event)
         db.commit()
         return event
+
+    @staticmethod
+    def delete(db: Session, id: int):
+        db.query(Evento).filter(Evento.event_id == id).delete()
+        db.commit()
 
     @staticmethod
     def find_by_group(db: Session, group_id: int):
