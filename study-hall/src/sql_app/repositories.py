@@ -10,6 +10,7 @@ class UsuarioRepository:
         else:
             db.add(user)
         db.commit()
+        return user
 
     @staticmethod
     def find_by_id(db: Session, id: int) -> Usuario:
@@ -23,7 +24,10 @@ class UsuarioRepository:
     def login(db: Session, username: str, password: str):
         user = db.query(Usuario).filter(Usuario.username == username).first()
 
-        return user.password == password
+        if user.password == password:
+            return user
+        else:
+            return False
 
 
 class UsuarioGrupoRepository:
@@ -31,6 +35,7 @@ class UsuarioGrupoRepository:
     def save(db: Session, user_group: UsuarioGrupo):
         db.add(user_group)
         db.commit()
+        return user_group
         
 class GrupoRepository:
     @staticmethod
@@ -60,6 +65,7 @@ class EventoRepository:
         else:
             db.add(event)
         db.commit()
+        return event
 
     @staticmethod
     def find_by_group(db: Session, group_id: int):
@@ -74,6 +80,7 @@ class PostRepository:
         else:
             db.add(post)
         db.commit()
+        return post
 
     @staticmethod
     def find_by_group_id(db: Session, group_id: int):
