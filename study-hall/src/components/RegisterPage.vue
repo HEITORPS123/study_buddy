@@ -36,6 +36,7 @@
             filled
             label="Interests"
             multiple
+            v-model="itemsSelected"
           ></v-select>
         </v-col>
       </v-row>
@@ -97,7 +98,8 @@
           <v-textarea
            filled
            label="About me"
-           height="200px"></v-textarea>
+           height="200px"
+           v-model="aboutMeContent"></v-textarea>
          </v-col>
        </v-row>
 
@@ -133,6 +135,7 @@
       dateFormatted: vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
       menu1: false,
       menu2: false,
+      itemsSelected: [],
       interests: "",
       username: "",
       password: "",
@@ -165,7 +168,10 @@
         const [month, day, year] = date.split('/')
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
       },
-      postForm() {
+      async postForm() {
+        let url = 'http://localhost:8890/createUser'
+
+        this.interests = this.itemsSelected.join('-')
         const data = {
           username: this.username,
           interests: this.interests,
@@ -175,14 +181,8 @@
           about: this.aboutMeContent
         };
 
-        axios({
-          method: 'post',
-          url:  'http://localhost:8890/createUser',
-          withCredentials: false,
-          headers: {
-      'Content-Type' : 'form-data' },
-          data: data
-        });
+        const response = await axios.post(url,data, {headers:{'Access-Control-Request-Method': 'POST'}})
+        this.$router.push('/')
       },
     }
   }

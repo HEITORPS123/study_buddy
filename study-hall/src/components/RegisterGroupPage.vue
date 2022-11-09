@@ -75,7 +75,7 @@
            height=84
            width=266
            color="primary"
-           @click="postForm"
+           @click="postFormGrupo"
          >
          Register
          </v-btn>
@@ -91,33 +91,28 @@
     data: () => ({
       items: ['Ciencia', 'Historia', 'Portugues', 'Matematica', 'Geografia', 'Politica', 'Computacao', 'Filosofia', 'Sociologia'],
       group_name: "",
-      organizer_id: 0,
+      organizer_id: 1,
       organizer_name: "",
       organizer_contact: "",
       interest: "",
       aboutMeContent: ""      
     }),
+
     methods: {
-      postForm() {
-        const data = JSON.stringify({
+      async postFormGrupo() {
+        let url = 'http://localhost:8890/createGroup'
+        const data = {
+          user_id: this.organizer_id,
           group_name: this.group_name,
-          organizer_id: this.organizer_id,
           organizer_name: this.organizer_name,
           organizer_contact: this.organizer_contact,
           interest: this.interest,
           about: this.aboutMeContent
-        })
+        };
 
-        return axios.post("/add", {
-            data: data
-        }, {
-            headers: {
-                'Content-type': 'application/json',
-            }
-        }).then((response) => {
-          console.log("content: " + response);
-        });
-      }
+        await axios.post(url, data, {headers: {'Access-Control-Request-Method': 'POST'}})
+        this.$router.push('/')
+      },
     }
   }
 </script>
