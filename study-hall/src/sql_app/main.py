@@ -37,6 +37,10 @@ async def createUser(request: schemas.UsuarioRequest, db: Session = Depends(get_
     user = UsuarioRepository.save(db, Usuario(**request.dict()))
     return schemas.UsuarioResponse.from_orm(user)
 
+@app.post('/deleteUser', status_code=status.HTTP_200_OK)
+async def deleteUser(id: schemas.SimpleID, db: Session = Depends(get_db)):
+    UsuarioRepository.delete(db, id.id)
+
 @app.post('/updateUser', status_code=status.HTTP_201_CREATED)
 async def createUser(request: schemas.UsuarioResponse, db: Session = Depends(get_db)):
     user = UsuarioRepository.save(db, Usuario(**request.dict()))
@@ -64,6 +68,10 @@ async def createGroup(request: schemas.GrupoRequest, db: Session = Depends(get_d
     UsuarioGrupoRepository.save(db, UsuarioGrupo(user_id = group.user_id, group_id = group.group_id))
     return schemas.GrupoResponse.from_orm(group)
 
+@app.post('/deleteGroup', status_code=status.HTTP_200_OK)
+async def deleteGroup(id: schemas.SimpleID, db: Session = Depends(get_db)):
+    GrupoRepository.delete(db, id.id)
+
 @app.post('/getGroup', response_model=schemas.GrupoResponse)
 async def getGroup(id: schemas.SimpleID, db: Session = Depends(get_db)):
     group = GrupoRepository.find_by_user_id(db, id.id)
@@ -79,6 +87,10 @@ async def getGroupInterest(interest: schemas.Interest, db: Session = Depends(get
 async def createEvent(request: schemas.EventoRequest, db: Session = Depends(get_db)):
     event = EventoRepository.save(db, Evento(**request.dict()))
     return schemas.EventoResponse(event)
+
+@app.post('/deleteEvent', status_code=status.HTTP_200_OK)
+async def deleteEvent(id: schemas.SimpleID, db: Session = Depends(get_db)):
+    EventoRepository.delete(db, id.id)
 
 @app.post('/getEventGroup', response_model=List[schemas.EventoResponse])
 async def getGroup(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
