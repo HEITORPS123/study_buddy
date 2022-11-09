@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from repositories import UsuarioRepository, GrupoRepository, EventoRepository, PostRepository, UsuarioGrupoRepository
 from models import Usuario, UsuarioGrupo, Grupo, Evento, Post
+from typing import List
 import models
 import schemas
 
@@ -35,7 +36,7 @@ async def getUser(user_id: schemas.SimpleID, db: Session = Depends(get_db)):
         )
     return schemas.UsuarioResponse.from_orm(user)
 
-@app.post('/getUserGroups', response_model=list[schemas.UsuarioResponse])
+@app.post('/getUserGroups', response_model=List[schemas.UsuarioResponse])
 async def getUserGroups(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
     users = UsuarioRepository.find_by_group_id(db, group_id.id)
     return [schemas.UsuarioResponse.from_orm(user) for user in users]
@@ -52,7 +53,7 @@ async def getGroup(id: schemas.SimpleID, db: Session = Depends(get_db)):
     group = GrupoRepository.find_by_id(db, id.id)
     return schemas.GrupoResponse.from_orm(group)
 
-@app.post('/getGroupInterest', response_model=list[schemas.GrupoResponse])
+@app.post('/getGroupInterest', response_model=List[schemas.GrupoResponse])
 async def getGroupInterest(interest: schemas.Interest, db: Session = Depends(get_db)):
     groups = GrupoRepository.find_by_interest(db, interest.interest)
     return [schemas.GrupoResponse.from_orm(group) for group in groups]
@@ -62,7 +63,7 @@ async def getGroupInterest(interest: schemas.Interest, db: Session = Depends(get
 async def createEvent(request: schemas.EventoRequest, db: Session = Depends(get_db)):
     EventoRepository.save(db, Evento(**request.dict()))
 
-@app.post('/getEventGroup', response_model=list[schemas.EventoResponse])
+@app.post('/getEventGroup', response_model=List[schemas.EventoResponse])
 async def getGroup(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
     events = EventoRepository.find_by_group(db, group_id.id)
     return [schemas.EventoResponse.from_orm(event) for event in events]
@@ -72,7 +73,7 @@ async def getGroup(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
 async def createPost(request: schemas.PostRequest, db: Session = Depends(get_db)):
     PostRepository.save(db, Post(**request.dict()))
 
-@app.post('/getPosts', response_model=list[schemas.PostResponse])
+@app.post('/getPosts', response_model=List[schemas.PostResponse])
 async def getPosts(group_id: schemas.SimpleID, db: Session = Depends(get_db)):
     posts = PostRepository.find_by_group_id(db, group_id.id)
     return [schemas.PostResponse.from_orm(post) for post in posts]
