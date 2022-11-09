@@ -12,11 +12,24 @@
         <v-col cols="4.5" class="usertext">
             <v-row>
                 <v-img
-                lazy-src="https://picsum.photos/id/11/10/6"
-                max-height="324"
-                max-width="360"
-                src="https://picsum.photos/id/11/500/300"
+                height="300"
+                width="300"
+                class="rounded-circle"
+                src="../assets/user.png"
                 ></v-img>
+              </v-row>
+
+              <v-row class="subheadertext">
+                <v-btn
+                  depressed
+                  elevation="0"
+                  large
+                  plain
+                  width="350px"
+                  @click="go_to_path('/edit')"
+                >
+                  <h1>Editar Perfil</h1>
+                </v-btn>
               </v-row>
 
               <v-row class="subheadertext">
@@ -108,6 +121,13 @@
       const data_nascimento = new Date(this.user_infos.birthday)
       const month_diff = Date.now() - data_nascimento.getTime()
       this.idade = Math.abs(new Date(month_diff).getUTCFullYear() - 1970)
+    },
+    methods: {
+      go_to_path (path) {
+        if (this.$route.path !== path) {
+          this.$router.push(path);
+        }
+      }
     }
   }
 </script>
