@@ -15,7 +15,7 @@
                 height="300"
                 width="300"
                 class="rounded-circle"
-                src="../assets/image.jpeg"
+                src="../assets/user.png"
                 ></v-img>
               </v-row>
 

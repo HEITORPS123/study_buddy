@@ -63,7 +63,9 @@
                           </v-row>
                           <v-row>
                             <v-column>
-                              <v-btn class="cardcontent">
+                              <v-btn class="cardcontent"
+                              @click="go_to_path('/group/'+item.group_id)"
+                              >
                                 enter
                               </v-btn>
                             </v-column>
@@ -119,6 +121,11 @@
         },
 
         methods: {
+            go_to_path (path) {
+              if (this.$route.path !== path) {
+                this.$router.push(path);
+              }
+            },
             loadnext() {
               this.toRender = [];
               for (let i = this.start; i < (this.start + 5); i++){
