@@ -13,6 +13,7 @@
         flatten
         v-bind="attrs"
         v-on="on"
+        @click="refresh_events"
       >
         <h3>Ver Eventos</h3>
       </v-btn>
@@ -67,7 +68,7 @@
                       </v-col>
                     </v-row>
                     <v-row>
-                      <p class="event-about"> {{ event.about }} </p>
+                      <p class="event-about"> {{ event.content }} </p>
                     </v-row>
                   </v-row>
                 </v-card>
@@ -104,6 +105,17 @@ export default {
 
       const response = await axios.post(url,data)
       this.events = response.data
+  },
+  methods: {
+    async refresh_events () {
+      let url = 'http://localhost:8890/getEventGroup'
+      let data = {
+          id: parseInt(this.$route.params.group_id),
+      }
+
+      const response = await axios.post(url,data)
+      this.events = response.data
+    }
   }
 }
 </script>

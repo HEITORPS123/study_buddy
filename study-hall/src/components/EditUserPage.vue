@@ -110,7 +110,7 @@
              color="primary"
              @click="postForm"
            >
-           Register
+           <h3> Salvar </h3>
            </v-btn>
         </div>
       </v-card>

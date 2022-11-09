@@ -123,10 +123,6 @@
 </template>
 <script>
 import axios from 'axios';
-<<<<<<< HEAD
-=======
-
->>>>>>> 54b329d5d478478b8c340c4e951fb91c218de8ff
 export default {
   methods: {
     go_to_path (path) {
