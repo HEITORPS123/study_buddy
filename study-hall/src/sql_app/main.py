@@ -37,6 +37,11 @@ async def createUser(request: schemas.UsuarioRequest, db: Session = Depends(get_
     user = UsuarioRepository.save(db, Usuario(**request.dict()))
     return schemas.UsuarioResponse.from_orm(user)
 
+@app.post('/updateUser', status_code=status.HTTP_201_CREATED)
+async def createUser(request: schemas.UsuarioResponse, db: Session = Depends(get_db)):
+    user = UsuarioRepository.save(db, Usuario(**request.dict()))
+    return schemas.UsuarioResponse.from_orm(user)
+
 @app.post('/getUser', response_model=schemas.UsuarioResponse)
 async def getUser(user_id: schemas.SimpleID, db: Session = Depends(get_db)):
     user = UsuarioRepository.find_by_id(db, user_id.id)
