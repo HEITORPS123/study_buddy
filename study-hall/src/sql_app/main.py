@@ -7,7 +7,7 @@ from models import Usuario, UsuarioGrupo, Grupo, Evento, Post
 from typing import List
 import models
 import schemas
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
