@@ -133,7 +133,7 @@
       dateFormatted: vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
       menu1: false,
       menu2: false,
-      interests: [],
+      interests: "",
       username: "",
       password: "",
       fullName: "",
@@ -166,26 +166,25 @@
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
       },
       postForm() {
-        const data = JSON.stringify({
+        const data = {
           username: this.username,
           interests: this.interests,
           password: this.password,
           birthday: this.dateFormatted,
           fullname: this.fullName,
           about: this.aboutMeContent
-        })
+        };
 
-        return axios.post("/add", {
-            data: data
-        }, {
-            headers: {
-                'Content-type': 'application/json',
-            }
-        }).then((response) => {
-            console.log("content: " + data);
+        axios({
+          method: 'post',
+          url:  'http://localhost:8890/createUser',
+          withCredentials: false,
+          headers: {
+      'Content-Type' : 'form-data' },
+          data: data
         });
-      }
-    },
+      },
+    }
   }
 </script>
 
