@@ -93,6 +93,7 @@
                 plain
                 width="192px"
                 class="align-button-home"
+                @click="alert"
               >
                 <b>Meu Grupo</b>
               </v-btn>
@@ -127,6 +128,10 @@ export default {
       if (this.$route.path !== path) {
         this.$router.push(path);
       }
+    },
+    alert () {
+      let user_id = document.cookie.split('=')[1]
+      alert(user_id)
     }
   },
 }

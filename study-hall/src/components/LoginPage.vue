@@ -75,6 +75,7 @@
   </v-container>
 </template>
 <script>
+import axios from 'axios';
 export default {
   methods: {
     go_to_path (path) {
@@ -82,8 +83,16 @@ export default {
         this.$router.push(path);
       }
     },
-    login(){
-      alert(this.username + ":" + this.password)
+    async login() {
+      document.cookie = "user_id=queijo"
+      let url = 'http://localhost:8089/login'
+      let data = {
+          'username': this.username,
+          'password': this.password
+      }
+
+      const response = await axios.post(url,data, {headers:{'Access-Control-Request-Method': 'POST'}})
+      alert(JSON.stringify(response.data))
     }
   },
 }
