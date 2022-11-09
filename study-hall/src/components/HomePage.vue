@@ -122,6 +122,8 @@
   </v-container>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
   methods: {
     go_to_path (path) {

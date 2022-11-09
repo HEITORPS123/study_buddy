@@ -10,6 +10,11 @@ const routes = [
     component: () => import('../components/RegisterPage.vue'),
   },
   {
+    path: '/edit',
+    name: 'editUserPage',
+    component: () => import('../components/EditUserPage.vue'),
+  },
+  {
     path: '/group/:group_id',
     name: 'group',
     component: () => import('../components/GroupPage.vue'),

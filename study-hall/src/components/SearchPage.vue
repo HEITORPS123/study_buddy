@@ -46,7 +46,7 @@
                     >
                       <v-row>
                         <v-column>
-                          <v-img src= 'https://cdn.vuetifyjs.com/images/cards/halcyon.png'
+                          <v-img src= '../assets/landscape.jpeg'
                           height="150px"
                           width="150px"
                           class="cardimage"
@@ -80,7 +80,6 @@
                 <v-btn @click="loadnext()" class="nextbutton">next</v-btn>
             </v-row>
         </div>
-        {{$data}}
       </v-card>
     </v-container>
   </template>
