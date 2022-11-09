@@ -74,7 +74,7 @@ async def deleteGroup(id: schemas.SimpleID, db: Session = Depends(get_db)):
 
 @app.post('/getGroup', response_model=schemas.GrupoResponse)
 async def getGroup(id: schemas.SimpleID, db: Session = Depends(get_db)):
-    group = GrupoRepository.find_by_id(db, id.id)
+    group = GrupoRepository.find_by_user_id(db, id.id)
     return schemas.GrupoResponse.from_orm(group)
 
 @app.post('/getGroupInterest', response_model=List[schemas.GrupoResponse])
