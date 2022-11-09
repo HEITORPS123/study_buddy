@@ -75,7 +75,6 @@
               </v-container>
           </v-col>
       </v-row>
-      {{$data}}
     </v-card>
   </v-container>
 </template>
@@ -95,7 +94,7 @@
     async mounted() {
       const url = 'http://localhost:8890/getUser'
       const user_id = parseInt(this.$route.params.user_id)
-      console.log(user_id)
+
       const data = {
         id: user_id
       };

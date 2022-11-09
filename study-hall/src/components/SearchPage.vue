@@ -23,6 +23,8 @@
                     rounded
                     label="Filtro 1"
                     style="width:200px"
+                    v-model="interest"
+                    v-on:change="searchFilter"
                     ></v-select>
                 </v-col>
 
@@ -33,7 +35,7 @@
             </v-row>
 
             <v-row
-                v-for="(item) in toRender" :key="item.title"
+                v-for="(item) in toRender" :key="item.group_name"
                 class="groupcards"
             >
                     <v-card
@@ -44,7 +46,7 @@
                     >
                       <v-row>
                         <v-column>
-                          <v-img :src="item.src"
+                          <v-img src= 'https://cdn.vuetifyjs.com/images/cards/halcyon.png'
                           height="150px"
                           width="150px"
                           class="cardimage"
@@ -52,7 +54,12 @@
                         </v-column>
                         <v-column>
                           <v-row>
-                              <h2 class="cardcontent">{{ item.title }}</h2>
+                              <h2 class="cardcontent">{{ item.group_name }}</h2>
+                          </v-row>
+                          <v-row>
+                            <div class="cardtext">
+                              {{ item.about }}
+                            </div>
                           </v-row>
                           <v-row>
                             <v-column>
@@ -69,69 +76,47 @@
               <v-divider intern class="divider"></v-divider>
             </v-row>
 
-            <v-row>
+            <v-row v-if="toRender.length > 4">
                 <v-btn @click="loadnext()" class="nextbutton">next</v-btn>
             </v-row>
         </div>
+        {{$data}}
       </v-card>
     </v-container>
   </template>
   
   <script>
+    import axios from 'axios';
+
     export default {
         data: () => ({
-            filtros: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-            items: [
-                {
-                color: '#1F7087',
-                src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-                title: 'Supermodel',
-                artist: 'Foster the People',
-                },
-                {
-                color: '#952175',
-                src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-                title: 'Halcyon Days',
-                artist: 'Ellie Goulding',
-                },
-                {
-                color: '#952175',
-                src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-                title: 'Halcyon Days',
-                artist: 'Ellie Goulding',
-                },
-                {
-                color: '#952175',
-                src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-                title: 'Halcyon Days',
-                artist: 'Ellie Goulding',
-                },
-                {
-                color: '#952175',
-                src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-                title: 'Halcyon Days',
-                artist: 'Ellie Goulding',
-                },
-                {
-                color: '#952175',
-                src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-                title: 'Halcyon Days',
-                artist: 'Ellie Goulding',
-                },
-            ],
+            filtros: ['Ciencia', 'Historia', 'Portugues', 'Matematica', 'Geografia', 'Politica', 'Computacao', 'Filosofia', 'Sociologia'],
             cor: '#D9D9D9',
+            interest: "Ciencia",
             start: 0, // Lower limit 
             end: 5, // Upper Limit
-            questions: [], // Array containing all the questions.
+            allGroups: [],
             toRender: []
         }),
 
-        mounted() {
-            for (let i = this.start; i < this.end; i++){
-                this.toRender.push(this.items[i])
-            }
-            this.start = this.start + this.toRender.length
-            this.end = this.items.length
+        async mounted() {
+          let url = 'http://localhost:8890/getGroupInterest'
+
+          const data = {
+            interest: this.interest
+          };
+
+          const response = await axios.post(url,data, {headers:{'Access-Control-Request-Method': 'POST'}}).then(response => response.data)
+          this.allGroups = response
+          this.end = this.allGroups.length
+          for (let i = this.start; i < (this.start + 5); i++){
+              if (i >= this.end) {
+                break;
+              }
+              this.toRender.push(this.allGroups[i])
+          }
+
+          this.start = this.start + this.toRender.length
         },
 
         methods: {
@@ -141,8 +126,30 @@
                   if (i >= this.end) {
                     break;
                   }
-                  this.toRender.push(this.items[i])
+                  this.toRender.push(this.allGroups[i])
               }
+              this.start += 5
+            },
+            async searchFilter() {
+              let url = 'http://localhost:8890/getGroupInterest'
+
+              const data = {
+                interest: this.interest
+              };
+
+              this.start = 0
+              this.toRender = []
+              const response = await axios.post(url,data, {headers:{'Access-Control-Request-Method': 'POST'}}).then(response => response.data)
+              this.allGroups = response
+              this.end = this.allGroups.length
+              for (let i = this.start; i < (this.start + 5); i++){
+                  if (i >= this.end) {
+                    break;
+                  }
+                  this.toRender.push(this.allGroups[i])
+              }
+
+              this.start = this.start + this.toRender.length
             }
         } 
     }
@@ -199,7 +206,14 @@
     margin-top: 50px;
     margin-left: 50px;
     margin-right: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
+  }
+
+  .cardtext {
+    color:#000000;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 10px;
   }
 
   .nextbutton {
