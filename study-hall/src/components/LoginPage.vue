@@ -84,15 +84,16 @@ export default {
       }
     },
     async login() {
-      document.cookie = "user_id=queijo"
-      let url = 'http://localhost:8089/login'
+      let url = 'http://localhost:8890/login'
       let data = {
-          'username': this.username,
-          'password': this.password
+          username: this.username,
+          password: this.password
       }
 
-      const response = await axios.post(url,data, {headers:{'Access-Control-Request-Method': 'POST'}})
-      alert(JSON.stringify(response.data))
+      const response = await axios.post(url,data)
+
+      document.cookie = "user_id="+response.data.user_id
+      this.$router.push('/')
     }
   },
 }

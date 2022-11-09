@@ -91,7 +91,6 @@
     data: () => ({
       items: ['Ciencia', 'Historia', 'Portugues', 'Matematica', 'Geografia', 'Politica', 'Computacao', 'Filosofia', 'Sociologia'],
       group_name: "",
-      organizer_id: 1,
       organizer_name: "",
       organizer_contact: "",
       interest: "",
@@ -101,8 +100,9 @@
     methods: {
       async postFormGrupo() {
         let url = 'http://localhost:8890/createGroup'
+        let user_id = document.cookie.split('=')[1]
         const data = {
-          user_id: this.organizer_id,
+          user_id: parseInt(user_id),
           group_name: this.group_name,
           organizer_name: this.organizer_name,
           organizer_contact: this.organizer_contact,

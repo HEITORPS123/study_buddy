@@ -24,7 +24,7 @@ class UsuarioRepository:
     def login(db: Session, username: str, password: str):
         user = db.query(Usuario).filter(Usuario.username == username).first()
 
-        if user.password == password:
+        if user.password and user.password == password:
             return user
         else:
             return False

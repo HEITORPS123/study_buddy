@@ -45,7 +45,7 @@
                 plain
                 width="192px"
                 class="align-button-home"
-                @click="go_to_path('/user')"
+                @click="go_to_path_user"
               >
                 <b>Perfil</b>
               </v-btn>
@@ -93,7 +93,7 @@
                 plain
                 width="192px"
                 class="align-button-home"
-                @click="alert"
+                @click="enter_my_group"
               >
                 <b>Meu Grupo</b>
               </v-btn>
@@ -129,9 +129,21 @@ export default {
         this.$router.push(path);
       }
     },
-    alert () {
+    go_to_path_user () {
       let user_id = document.cookie.split('=')[1]
-      alert(user_id)
+      this.$router.push(`/user/${user_id}`);
+    },
+    async enter_my_group () {
+      let user_id = document.cookie.split('=')[1]
+
+      let url = 'http://localhost:8890/getUserGroups'
+      let data = {
+          id: user_id,
+      }
+
+      const response = await axios.post(url,data)
+      console.log(response.data)
+      /* this.$router.push(`/group/${group_id}`); */
     }
   },
 }
